@@ -1,0 +1,31 @@
+<html>
+
+<head>
+    <title>Tecnicas Otimiz</title>
+</head>
+
+<body onresize="Resize()">
+    <div style="text-align:center">
+        <button type="button" onclick="PontosDefinidos()" id = "Bpd">Pontos Definidos</button>
+    </div>
+    <div style="text-align:center">
+        <canvas id="GrahamCanvas" width="500" height="500">Seu navegador nao suporta canvas</canvas>
+    </div>
+    <div style="text-align:center">
+        <button type="button" onclick="Start()" id="Bc">Calcular</button>
+    </div>
+    <div style="text-align:center">
+        <button type="button" onclick="BotaoGraham()" id="Bgs">Graham Scan</button>
+        <button type="button" onclick="BotaoVoronoi()" id="Bvo">Voronoi</button>
+        <button type="button" onclick="BotaoGrafo()" id="Bgr">Grafo</button>
+        <button type="button" onclick="CalcularAstar()" id="Bmc">AStar</button>
+    </div>
+    <div style="text-align:center">
+        <button type="button" onclick="Resetar()" id="bR">Resetar</button>
+    </div>
+    <script src="Grafo.js"></script>
+    <script src="rhill-voronoi-core.js"></script>
+    <script src="Graham.js"></script>
+</body>
+
+</html>
