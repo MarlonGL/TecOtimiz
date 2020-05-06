@@ -34,6 +34,8 @@ var botaoBc = document.getElementById("Bc");
 var botaoBgs = document.getElementById("Bgs");
 var botaoBvo = document.getElementById("Bvo");
 var botaoBgr = document.getElementById("Bgr");
+var botaoBRas = document.getElementById("bras");
+var botaoPa = document.getElementById("Bpa");
 
 function ccw(p1, p2, p3) {
     // ccw > 0: counter-clockwise; ccw < 0: clockwise; ccw = 0: collinear
@@ -84,10 +86,8 @@ function CleanCanvas() {
 CleanCanvas();
 
 pontos = [];
-botaoBgs.style.visibility = "hidden";
-botaoBvo.style.visibility = "hidden";
-botaoBgr.style.visibility = "hidden";
-botaoBmc.style.visibility = "hidden";
+
+Resetar();
 
 canvas.addEventListener('click', (e) => {
     //console.log(clicavel);
@@ -112,6 +112,13 @@ canvas.addEventListener('click', (e) => {
                 //console.log("clicou " + pontos[i]);
                 if(clickponto == 0){
                     pontoStart = sites[i].voronoiId;
+                    ctx.fillStyle = "blue";
+                    ctx.strokeStyle = "#05eaff";
+                    ctx.beginPath();
+                    ctx.arc(sites[pontoStart].x, sites[pontoStart].y, pSize * 2, 0, 2 * Math.PI);
+                    ctx.lineWidth = 4;
+                    ctx.fill();
+                    ctx.stroke();
                     console.log("ponto start: "+ pontoStart);
                     clickponto++;
                 }else if(clickponto == 1){
@@ -121,6 +128,7 @@ canvas.addEventListener('click', (e) => {
                     botaoBmc.style.visibility = "visible";
                     astarb = true;
                     Astar(pontoStart, pontoEnd);
+                    botaoBRas.style.visibility = "visible";
                 }
             }
         }
@@ -134,6 +142,7 @@ function Resize() {
 }
 function PontosDefinidos() {
     botaoPD.style.visibility = "hidden";
+    botaoPa.style.visibility = "hidden";
     CleanCanvas();
     pontos = [];
     clicavel = false;
@@ -158,6 +167,30 @@ function PontosDefinidos() {
     }
     DrawPontos();
 }
+
+function PontosAleatorios(){
+    botaoPD.style.visibility = "hidden";
+    botaoPa.style.visibility = "hidden";
+    CleanCanvas();
+    pontos = [];
+    clicavel = false;
+
+    var tam = Math.floor((Math.random()* 15) + 15);
+    var w = width - 50;
+    var h = height - 50;
+    //var tam = 8;
+    for (var i = 0; i < tam; i++) {
+        var xx = Math.round((Math.random() * 30) -15);
+        var yy = Math.round((Math.random() * 30) - 15);
+        pontos.push({ x: xx, y: yy, a: 0 });
+    }
+
+    for (var i = 0; i < pontos.length; i++) {
+        pontos[i].x = pontos[i].x * 15;
+        pontos[i].y = pontos[i].y * 15;
+    }
+    DrawPontos();
+}
 //esses pontos abaixo dao erro para: Marlon do futuro
 /*pontos = [ {x:-0, y:-14, a:0}, {x:-10.5, y:-14, a:0},
     {x:-10, y:9, a:0}, {x:-4.5, y:-14, a:0}, {x:-1, y:8.5, a:0},
@@ -171,13 +204,7 @@ function PontosDefinidos() {
     {x:3.5, y:11, a:0}, {x:5.5, y:3, a:0}, {x:5.5, y:-7, a:0},
     {x:5, y:11.5, a:0}, {x:6.5, y:3.2, a:0}, {x:7, y:-10, a:0},
     {x:9, y:-5, a:0}, {x:11.5, y:-4, a:0} ];*/
-//var tam = Math.floor((Math.random()* 20) + 20);
-/*var tam = 8;
-for(var i=0;i<tam;i++){
-    var xx = Math.round((Math.random()* 30) - 15);
-    var yy = Math.round((Math.random()* 30) - 15);
-    pontos.push({x:xx, y:yy, a:0});
-}*/
+
 function DrawPontos() {
     //console.log(pontos);
     ctx.fillStyle = "lime";
@@ -186,6 +213,7 @@ function DrawPontos() {
         ctx.beginPath();
         //ctx.fillRect(pontos[i].x, pontos[i].y, pSize, pSize);
         ctx.arc(pontos[i].x, pontos[i].y, pSize, 0, 2 * Math.PI);
+        ctx.lineWidth = 1;
         ctx.fill();
         ctx.stroke();
     }
@@ -199,22 +227,61 @@ function Start(){
         CalcularVoronoi();
         //DrawGrafo();
         botaoPD.style.visibility = "hidden";
+        botaoPa.style.visibility = "hidden";
         botaoBc.style.visibility = "hidden";
         botaoBgs.style.visibility = "visible";
         botaoBvo.style.visibility = "visible";
         botaoBgr.style.visibility = "visible";
         
-        BotaoGrafo();
+        //BotaoGrafo();
         astarSelection = true;
         //alert(clicavel);
+    }
+    else{
+        alert("poucos pontos");
     }
 }
 
 function Resetar(){
-    /*CleanCanvas();
+    CleanCanvas();
+   
+    pontos = [];
+
+    hull = [];
+
+    edges = [];
+    caminho = [];
+
+    voronoi = new Voronoi();
+    sites = [];
+    edges = [];
+    cells = [];
+
+    grafo = new Grafo();
+    nodos = [];
+
+    clickponto = 0;
+    astarSelection = true;
+
+    botaoPD.style.visibility = "visible";
+    botaoPa.style.visibility = "visible";
+    botaoBc.style.visibility = "visible";
+    botaoBgs.style.visibility = "hidden";
+    botaoBvo.style.visibility = "hidden";
+    botaoBgr.style.visibility = "hidden";
+    botaoBmc.style.visibility = "hidden";
+    botaoBRas.style.visibility = "hidden";
+
     clicavel = true;
-    pontos = [];*/
-    //graham
+
+    graham = false;
+    voronoiBool = false;
+    grafoB = false;
+    astarb = false;
+
+    ResAstar();
+
+    console.log("resetou");
 }
 
 function ReDraw(qual){
@@ -263,7 +330,7 @@ function ReDraw(qual){
     else if("Astar"){
         CleanCanvas();
         DrawPontos();
-        astarb = false;
+        //astarb = false;
         if(graham){
             DrawConvexHull();
         }
@@ -328,7 +395,7 @@ function DrawVoronoi() {
         v = edge.vb;
         ctx.lineTo(v.x, v.y);
         ctx.strokeStyle = "white";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1;
         ctx.stroke();
     }
 }
@@ -425,7 +492,7 @@ function DrawConvexHull(){
     ctx.strokeStyle = "yellow";
     for(var i=0;i<hull.length;i++){
         ctx.beginPath();
-        ctx.arc(hull[i].x, hull[i].y, pSize * 1.2, 0, 2 * Math.PI);
+        ctx.arc(hull[i].x, hull[i].y, pSize * 1.4, 0, 2 * Math.PI);
         ctx.fill();
         ctx.stroke();
     }
@@ -443,6 +510,7 @@ function DrawGrafo(){
             ctx.moveTo(sites[gNodos[i].id].x, sites[gNodos[i].id].y);
             ctx.lineTo(sites[gNodos[i].arestas[j].idVizinho].x, sites[gNodos[i].arestas[j].idVizinho].y);
             ctx.strokeStyle = "red";
+            ctx.lineWidth = 1;
             ctx.stroke();
         }
     }
@@ -470,6 +538,16 @@ function CalcularAstar() {
     }
     
 
+}
+
+function ResAstar(){
+    if (astarb) {
+        caminho = [];
+        CalcularAstar();
+        clickponto = 0;
+        astarSelection = true;
+        botaoBmc.style.visibility = "hidden";
+    }
 }
 
 function Astar(start, end){
