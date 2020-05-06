@@ -7,6 +7,7 @@ function Grafo(){
 
 Grafo.prototype.Nodo = function(indice){
     this.id = indice;
+    this.visitado = false;
     this.arestas = [];
 }
 

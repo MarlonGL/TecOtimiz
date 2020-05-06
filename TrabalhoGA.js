@@ -153,6 +153,10 @@ function PontosDefinidos() {
     { x: 5, y: 11.5, a: 0 }, { x: 6.5, y: 3.2, a: 0 }, { x: 7, y: -10, a: 0 },
     { x: 9, y: -5, a: 0 }, { x: 11.5, y: -4, a: 0 }];
 
+    /*pontos = [{x:202 ,y:375 , a:0},{x:192 ,y:380 , a:0},{x:389 ,y:120 , a:0}
+    ,{x:475 ,y:469 , a:0},{x:760 ,y:151 , a:0},{x:33 ,y:485 , a:0},
+    {x:302 ,y:479 , a:0},{x:331 ,y:92 , a:0},{x:729 ,y:434 , a:0},{x:633 ,y:391 , a:0}, {x:764 ,y:570 , a:0}];
+*/
     //pontos Brunao
     /*pontos = [{x: -10, y: -11, a:0},{x: 10, y: -8, a:0},
     {x: 14, y: -5, a:0}, {x: 12, y: -2, a: 0},
@@ -160,7 +164,7 @@ function PontosDefinidos() {
     {x: 8, y: 14, a: 0}, {x: -3, y: 5, a:0},
     {x: -2, y: 11, a: 0}, {x: -7, y: 12, a: 0},
     {x: -9, y: 2, a:0}, {x: -14, y: 8, a: 0}];*/
-
+    
     for (var i = 0; i < pontos.length; i++) {
         pontos[i].x = pontos[i].x * 15;
         pontos[i].y = pontos[i].y * 15;
@@ -184,7 +188,6 @@ function PontosAleatorios(){
         var yy = Math.round((Math.random() * 30) - 15);
         pontos.push({ x: xx, y: yy, a: 0 });
     }
-
     for (var i = 0; i < pontos.length; i++) {
         pontos[i].x = pontos[i].x * 15;
         pontos[i].y = pontos[i].y * 15;
@@ -234,6 +237,7 @@ function Start(){
         botaoBgr.style.visibility = "visible";
         
         //BotaoGrafo();
+        //Astar(4,5);
         astarSelection = true;
         //alert(clicavel);
     }
@@ -558,18 +562,20 @@ function Astar(start, end){
     calculando = true;
     var atual, pAtual;
     atual = 0;
+    pAtual = gn[start];
     var dEnd, dTotal, dMenor;
     while(calculando){
-        dMenor = 100000;//Para achar o vizinho com a menor distancia do ponto inicial relativo ao ponto final
+        dMenor = 1000000;//Para achar o vizinho com a menor distancia do ponto inicial relativo ao ponto final
         for(var i = 0; i < caminho[atual].arestas.length;i++){
             dEnd = dist(sites[caminho[atual].arestas[i].idVizinho], sites[gn[end].id]);
             dTotal = dEnd + caminho[atual].arestas[i].peso;
-            if(dTotal < dMenor){
+            if (dTotal < dMenor && !gn[caminho[atual].arestas[i].idVizinho].visitado){
                 dMenor = dTotal;
                 pAtual = gn[caminho[atual].arestas[i].idVizinho];
+                gn[caminho[atual].arestas[i].idVizinho].visitado = true;
             }
-            //console.log(dEnd, dTotal);
         }
+            //console.log(dEnd, dTotal);
         caminho.push(pAtual);
         if(pAtual.id == gn[end].id){
             calculando = false;
