@@ -42,27 +42,15 @@ function ccw(p1, p2, p3) {
    return (p2.x - p1.x) * (p3.y - p1.y)
     - (p2.y - p1.y) * (p3.x - p1.x);
 } 
-
 function polarAngle(p) {
     return Math.atan(p.y / p.x);
 }
 function angle(o, a) {
     return Math.atan((a.y-o.y) / (a.x - o.x));
 }
-function dotProduct(vec1, vec2) {
-    return (vec1.x * vec2.x + vec1.y * vec2.y);
-}
-function norm(vec) {
-    return Math.sqrt(vec.x * vec.x + vec.y * vec.y);
-}
-function computeAngle(v1, v2) {
-    var ac = dotProduct(v1, v2);
-    return Math.acos(ac / (norm(v1) * norm(v2))) * ONE_RADIAN;
-}
 function dist(p1, p2){
     return Math.sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.y - p2.y)*(p1.y - p2.y));
 }
-
 function interseccao(mouse, ponto){
     return Math.sqrt((mouse.x-ponto.x) ** 2 + (mouse.y - ponto.y) ** 2) < pSize;
 }
@@ -180,14 +168,14 @@ function PontosAleatorios(){
     var h = height - 50;
     //var tam = 8;
     for (var i = 0; i < tam; i++) {
-        var xx = Math.round((Math.random() * 30) -15);
-        var yy = Math.round((Math.random() * 30) - 15);
+        var xx = Math.round((Math.random() * w) -w/2);
+        var yy = Math.round((Math.random() * h) - h/2);
         pontos.push({ x: xx, y: yy, a: 0 });
     }
-    for (var i = 0; i < pontos.length; i++) {
-        pontos[i].x = pontos[i].x * 15;
-        pontos[i].y = pontos[i].y * 15;
-    }
+    pontos.sort(function (a, b) {
+        return a.y != b.y ? a.y - b.y : a.x - b.x;
+    });
+    //console.log(pontos);
     DrawPontos();
 }
 
@@ -208,7 +196,7 @@ function DrawPontos() {
 function Start(){
     if (pontos.length > 5) {
         clicavel = false;
-        console.log(pontos);
+        //console.log(pontos);
         GrahamScan();
         CalcularVoronoi();
         //DrawGrafo();
@@ -275,7 +263,7 @@ function ReDraw(qual){
     if(qual == "Voronoi"){
         CleanCanvas();
         DrawPontos();
-        voronoiBool = false;
+        //voronoiBool = false;
         if(graham){
             DrawConvexHull();
         }
@@ -289,7 +277,7 @@ function ReDraw(qual){
     else if(qual == "Graham"){
         CleanCanvas();
         DrawPontos();
-        graham = false;
+        //graham = false;
         if(voronoiBool){
             DrawVoronoi();
         }
@@ -303,7 +291,7 @@ function ReDraw(qual){
     else if(qual == "Grafo"){
         CleanCanvas();
         DrawPontos();
-        grafoB = false;
+        //grafoB = false;
         if(graham){
             DrawConvexHull();
         }
@@ -328,16 +316,8 @@ function ReDraw(qual){
             DrawGrafo();
         }
     }
-    //ctx.fillStyle = "black";
-    //ctx.fillRect(-width/2, -height/2, width, height);
-
-
 }
-
-
-
 function CalcularVoronoi() {
-    //voronoiBool = !voronoiBool;
     var bbox = { xl: -width / 2, xr: width / 2, yt: -height / 2, yb: height / 2 };
     sites = [];
     for (var i = 0; i < pontos.length; i++) {
@@ -363,14 +343,11 @@ function CalcularVoronoi() {
             n2 = edge.rSite.voronoiId;
             d1 = dist(sites[n1], sites[n2]);
             d2 = dist(sites[n2], sites[n1]);
-            //console.log(n1, n2);
             grafo.AddArestaOnNodo(n1, n2, d1);
             grafo.AddArestaOnNodo(n2, n1, d2);
         }
     }
-    //DrawVoronoi();
 }
-
 function DrawVoronoi() {
     var v;
     ctx.fillStyle = "white";
@@ -386,7 +363,6 @@ function DrawVoronoi() {
         ctx.stroke();
     }
 }
-
 function CalcularAngulos(origem){
     for(var i = 1;i<pontos.length;i++){
         var np = {x:0, y:0, a:0};
@@ -399,7 +375,6 @@ function CalcularAngulos(origem){
         pontos[i].a = np.a;
     }
 }
-
 function BotaoVoronoi(){
     voronoiBool = !voronoiBool;
     if(voronoiBool){
@@ -409,7 +384,6 @@ function BotaoVoronoi(){
         ReDraw("Voronoi");
     }
 }
-
 function BotaoGraham(){
     graham = !graham;
     if(graham){
@@ -419,7 +393,6 @@ function BotaoGraham(){
         ReDraw("Graham");
     }
 }
-
 function BotaoGrafo(){
     grafoB = !grafoB;
     if(grafoB){
@@ -428,23 +401,15 @@ function BotaoGrafo(){
     else{
         ReDraw("Grafo");
     }
-
 }
-
 function GrahamScan() {
-    //graham = !graham;
-    //console.log(graham);
-
     pontos.sort(function (a, b) {
         return a.y != b.y ? a.y - b.y : a.x - b.x;
     });
-    //pontos.shift();
     CalcularAngulos(pontos[0]);
-
     pontos.sort(function (a, b) {
         return a.a - b.a;
     });
-    //console.log(pontos);
     //O ponto com o menor y está no hull(pontos[0]);
     //os dois primeiros pontos pertencem ao hull apos a ordenacao por angulo
     hull.push(pontos[0]);
@@ -460,9 +425,7 @@ function GrahamScan() {
     }
 
     hull.push(pontos[0]);
-    //console.log(hull);
-
-    //DrawConvexHull();
+    console.log(hull);
 }
 
 function DrawConvexHull(){
@@ -484,13 +447,10 @@ function DrawConvexHull(){
         ctx.stroke();
     }
 }
-
 function DrawGrafo(){
     var gNodos = [];
     gNodos = grafo.getNodos();
-    //console.log(gNodos);
     for(var i = 0; i<gNodos.length; i++){
-       // var i = 1;
         ctx.fillStyle = "red";
         ctx.beginPath();
         for(var j = 0; j<gNodos[i].arestas.length; j++){
@@ -504,27 +464,20 @@ function DrawGrafo(){
     for(var i = 0; i<gNodos.length; i++){
         ctx.fillStyle = "lime";
         ctx.strokeStyle = "white";
-        //ctx.fillRect(sites[gNodos[i].id].x, sites[gNodos[i].id].y, pSize, pSize);
         ctx.beginPath();
-        //ctx.fillRect(pontos[i].x, pontos[i].y, pSize, pSize);
         ctx.arc(sites[gNodos[i].id].x, sites[gNodos[i].id].y, pSize, 0, 2 * Math.PI);
         ctx.fill();
         ctx.stroke();
     }
 }
-
 function CalcularAstar() {
     astarb = !astarb;
-    //astarb = !astarb;
     if (astarb) {
-        //Astar(pontoStart, pontoEnd);
         DrawAstar();
-        //botaoBmc.style.visibility = "hidden";
     }else{
         ReDraw("Astar");
     }
 }
-
 function ResAstar(){
     if (astarb) {
         caminho = [];

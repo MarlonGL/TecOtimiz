@@ -4,9 +4,7 @@ var ctx;
 var pontos = [];
 var pSize = 4;
 var hull = [];
-var pAtual = 0;
-//var s1 = [];
-//var s2 = [];
+
 var width;
 var height;
 
@@ -69,32 +67,55 @@ ctx.fillRect(0, 0, width, height);
 ctx.translate(width/2, height/2);
 
 //pontos
-/*pontos = [ {x:-13, y:0.5}, {x:-10.5, y:-11.5},
-    {x:-10, y:9}, {x:-4.5, y:-2}, {x:-1, y:8.5},
-    {x:0.5, y:6}, {x:0.5, y:-12}, {x:2, y:12.5},
-    {x:3.5, y:11}, {x:5.5, y:3}, {x:5.5, y:-7},
-    {x:5, y:11.5}, {x:6.5, y:3.2}, {x:7, y:-10},
-    {x:9, y:-5}, {x:11.5, y:-4} ];*/
-    var tam = Math.floor((Math.random()* 20) + 20);
-    
+
+function CleanCanvas() {
+    ctx.clearRect(-width/2, -height/2, width, height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(-width/2, -height/2, width, height);
+}
+
+function PontosDefinidos(){
+    pontos = [];
+    hull = [];
+    CleanCanvas();
+    pontos = [ {x:-13, y:0.5}, {x:-10.5, y:-11.5},
+        {x:-10, y:9}, {x:-4.5, y:-2}, {x:-1, y:8.5},
+        {x:0.5, y:6}, {x:0.5, y:-12}, {x:2, y:12.5},
+        {x:3.5, y:11}, {x:5.5, y:3}, {x:5.5, y:-7},
+        {x:5, y:11.5}, {x:6.5, y:3.2}, {x:7, y:-10},
+        {x:9, y:-5}, {x:11.5, y:-4} ];
+        
+        pontos.sort(function (a, b) {
+        return a.x != b.x ? a.x - b.x : a.y - b.y;
+    });
+    DrawPontos();
+    QuickHull();
+    DrawConvexHull();
+}
+function PontosAleatorios(){
+    pontos = [];
+    hull = [];
+    CleanCanvas();
+    var tam = Math.floor((Math.random()* 20) + 15);
     for(var i=0;i<tam;i++){
         var xx = Math.round((Math.random()* 30) - 15);
         var yy = Math.round((Math.random()* 30) - 15);
         pontos.push({x:xx, y:yy});
     }
     pontos.sort(function (a, b) {
-    return a.x != b.x ? a.x - b.x : a.y - b.y;
-});
-
-ctx.fillStyle = "white";
-for(var i=0;i<pontos.length;i++){
-    ctx.fillRect(pontos[i].x * 15, pontos[i].y * 15, pSize, pSize);
+        return a.x != b.x ? a.x - b.x : a.y - b.y;
+    });
+    DrawPontos();
+    QuickHull();
+    DrawConvexHull();
 }
 
-//console.log(pontos);
-console.log(pontos.length);
-QuickHull();
-
+function DrawPontos(){
+    ctx.fillStyle = "white";
+    for(var i=0;i<pontos.length;i++){
+        ctx.fillRect(pontos[i].x * 15, pontos[i].y * 15, pSize, pSize);
+    }
+}
 
 function QuickHull(){
     var a = pontos[0];
@@ -117,7 +138,7 @@ function QuickHull(){
     //adicionara o primeiro ponto dnovo para fechar o hull
     hull.push(hull[0]);
     
-    DrawConvexHull();
+    //DrawConvexHull();
 
     //console.log(hull);
     //FindS(s1, hull[0], hull[1]);
@@ -165,6 +186,7 @@ function FindHull(s, p1, p2, cHull){
 function DrawConvexHull(){
     ctx.fillStyle = "yellow";
     for(var i=0;i<hull.length - 1;i++){
+        ctx.beginPath();
         ctx.moveTo(hull[i].x * 15, hull[i].y * 15);
         ctx.lineTo(hull[i + 1].x * 15, hull[i + 1].y * 15);
         ctx.strokeStyle = "yellow";

@@ -7,6 +7,7 @@ var width;
 var height;
 var ponto1 = {x:0, y:0};
 var ponto2= {x:0, y:0};
+var minDist;
 //var ptemp1 = {x:0, y:0}, ptemp2 = {x:0, y:0}, ptemp3 = {x:0, y:0}, ptemp4 = {x:0, y:0};
 
 function dist(p1, p2)
@@ -45,37 +46,66 @@ ctx.fillRect(0, 0, width, height);
 ctx.translate(width/2, height/2);
 
 //pontos
-/*pontos = [ {x:-13, y:0.5}, {x:-10.5, y:-11.5},
-    {x:-10, y:9}, {x:-4.5, y:-2}, {x:-1, y:8.5},
-    {x:0.5, y:6}, {x:0.5, y:-12}, {x:2, y:12.5},
-    {x:3.5, y:11}, {x:5.5, y:3}, {x:5.5, y:-7},
-    {x:5, y:11.5}, {x:6.5, y:3.2}, {x:7, y:-10},
-    {x:9, y:-5}, {x:11.5, y:-4} ];
+/**/
+
+function CleanCanvas() {
+    ctx.clearRect(-width/2, -height/2, width, height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(-width/2, -height/2, width, height);
+}
+
+
+
+function PontosDefinidos(){
+    CleanCanvas();
+    pontos = [];
+    ponto1 = { x: 0, y: 0 };
+    ponto2 = { x: 0, y: 0 };
+    pontos = [ {x:-13, y:0.5}, {x:-10.5, y:-11.5},
+        {x:-10, y:9}, {x:-4.5, y:-2}, {x:-1, y:8.5},
+        {x:0.5, y:6}, {x:0.5, y:-12}, {x:2, y:12.5},
+        {x:3.5, y:11}, {x:5.5, y:3}, {x:5.5, y:-7},
+        {x:5, y:11.5}, {x:6.5, y:3.2}, {x:7, y:-10},
+        {x:9, y:-5}, {x:11.5, y:-4} ];
     pontos.sort(function (a, b) {
-    return a.x != b.x ? a.x - b.x : a.y - b.y;
-});*/
-var tam = 16;
-for(var i=0;i<tam;i++){
-    var xx = Math.round((Math.random()* 30) - 15);
-    var yy = Math.round((Math.random()* 30) - 15);
-    pontos.push({x:xx, y:yy, a:0});
-}
-console.log(pontos);
-
-ctx.fillStyle = "white";
-for(var i=0;i<pontos.length;i++){
-    ctx.fillRect(pontos[i].x * 15, pontos[i].y * 15, pSize, pSize);
+        return a.x != b.x ? a.x - b.x : a.y - b.y;
+    });
+    DrawPontos();
+    minDist = closestDivideAndConquer(pontos, pontos.length, ponto1, ponto2);
+    //minDist = brutal(pontos, pontos.length, ponto1, ponto2);
+    console.log(minDist.po1, minDist.po2, minDist.min);
+    finalDraw();
 }
 
-//var m = Math.round(pontos.length/2);
-//console.log(pontos[m].x + " medio");
+function PontosAleatorios() {
+    CleanCanvas();
+    pontos = [];
+    ponto1 = { x: 0, y: 0 };
+    ponto2 = { x: 0, y: 0 };
+    var tam = 16;
+    for (var i = 0; i < tam; i++) {
+        var xx = Math.round((Math.random() * 30) - 15);
+        var yy = Math.round((Math.random() * 30) - 15);
+        pontos.push({ x: xx, y: yy});
+    }
+    pontos.sort(function (a, b) {
+        return a.x != b.x ? a.x - b.x : a.y - b.y;
+    });
+    DrawPontos();
+    minDist = closestDivideAndConquer(pontos, pontos.length, ponto1, ponto2);
+    //minDist = brutal(pontos, pontos.length, ponto1, ponto2);
+    console.log(minDist.po1, minDist.po2, minDist.min);
+    finalDraw();
+}
+
+function DrawPontos() {
+    ctx.fillStyle = "white";
+    for (var i = 0; i < pontos.length; i++) {
+        ctx.fillRect(pontos[i].x * 15, pontos[i].y * 15, pSize, pSize);
+    }
+}
 
 
-var minDist;
-minDist = closestDivideAndConquer(pontos, pontos.length, ponto1, ponto2);
-//minDist = brutal(pontos, pontos.length, ponto1, ponto2);
-console.log(minDist.po1, minDist.po2, minDist.min);
-finalDraw();
 
 function closestDivideAndConquer(ps, tam, pp1, pp2){
     var ptemp1 = {x:0, y:0}, ptemp2 = {x:0, y:0}, ptemp3 = {x:0, y:0}, ptemp4 = {x:0, y:0};
@@ -147,13 +177,10 @@ function closestDivideAndConquer(ps, tam, pp1, pp2){
     var minFinal;
     minFinal = d3;
     if(minimo < d3){
-        console.log("minimo < d3");
+        //console.log("minimo < d3");
         pp1 = pt1;
         pp2 = pt2;
         minFinal = minimo;
-    }
-    else{
-        console.log("else");
     }
     return {min:minFinal, po1:pp1, po2:pp2};
     //return {distancia:minimo, ppp:pAtual};
