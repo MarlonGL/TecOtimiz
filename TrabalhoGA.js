@@ -153,10 +153,6 @@ function PontosDefinidos() {
     { x: 5, y: 11.5, a: 0 }, { x: 6.5, y: 3.2, a: 0 }, { x: 7, y: -10, a: 0 },
     { x: 9, y: -5, a: 0 }, { x: 11.5, y: -4, a: 0 }];
 
-    /*pontos = [{x:202 ,y:375 , a:0},{x:192 ,y:380 , a:0},{x:389 ,y:120 , a:0}
-    ,{x:475 ,y:469 , a:0},{x:760 ,y:151 , a:0},{x:33 ,y:485 , a:0},
-    {x:302 ,y:479 , a:0},{x:331 ,y:92 , a:0},{x:729 ,y:434 , a:0},{x:633 ,y:391 , a:0}, {x:764 ,y:570 , a:0}];
-*/
     //pontos Brunao
     /*pontos = [{x: -10, y: -11, a:0},{x: 10, y: -8, a:0},
     {x: 14, y: -5, a:0}, {x: 12, y: -2, a: 0},
@@ -194,19 +190,6 @@ function PontosAleatorios(){
     }
     DrawPontos();
 }
-//esses pontos abaixo dao erro para: Marlon do futuro
-/*pontos = [ {x:-0, y:-14, a:0}, {x:-10.5, y:-14, a:0},
-    {x:-10, y:9, a:0}, {x:-4.5, y:-14, a:0}, {x:-1, y:8.5, a:0},
-    {x:0.5, y:6, a:0}, {x:0.5, y:-10, a:0}, {x:2, y:12.5, a:0},
-    {x:3.5, y:11, a:0}, {x:5.5, y:3, a:0}, {x:5.5, y:-7, a:0},
-    {x:5, y:11.5, a:0}, {x:6.5, y:3.2, a:0}, {x:7, y:-10, a:0},
-    {x:9, y:-5, a:0}, {x:11.5, y:-4, a:0} ];*/
-/*pontos = [ {x:0, y:-12, a:0}, {x:-10.5, y:-14, a:0},
-    {x:-10, y:9, a:0}, {x:-4.5, y:-13, a:0}, {x:-1, y:8.5, a:0},
-    {x:0.5, y:6, a:0}, {x:0.5, y:-10, a:0}, {x:2, y:12.5, a:0},
-    {x:3.5, y:11, a:0}, {x:5.5, y:3, a:0}, {x:5.5, y:-7, a:0},
-    {x:5, y:11.5, a:0}, {x:6.5, y:3.2, a:0}, {x:7, y:-10, a:0},
-    {x:9, y:-5, a:0}, {x:11.5, y:-4, a:0} ];*/
 
 function DrawPontos() {
     //console.log(pontos);
@@ -469,7 +452,7 @@ function GrahamScan() {
 
     for (var i = 2; i < pontos.length; i++) {
         var p = hull.pop();
-        while (ccw(hull[hull.length - 1], p, pontos[i]) <= 0) {
+        while (ccw(hull[hull.length - 1], p, pontos[i]) < 0) {
             p = hull.pop();
         }
         hull.push(p);
@@ -540,8 +523,6 @@ function CalcularAstar() {
     }else{
         ReDraw("Astar");
     }
-    
-
 }
 
 function ResAstar(){
@@ -551,13 +532,14 @@ function ResAstar(){
         clickponto = 0;
         astarSelection = true;
         botaoBmc.style.visibility = "hidden";
+        grafo.ResetVisitados();
     }
 }
 
 function Astar(start, end){
     var gn = grafo.getNodos();
     caminho.push(gn[start]);
-
+    gn[start].visitado = true;
     var calculando;
     calculando = true;
     var atual, pAtual;
@@ -572,10 +554,9 @@ function Astar(start, end){
             if (dTotal < dMenor && !gn[caminho[atual].arestas[i].idVizinho].visitado){
                 dMenor = dTotal;
                 pAtual = gn[caminho[atual].arestas[i].idVizinho];
-                gn[caminho[atual].arestas[i].idVizinho].visitado = true;
             }
         }
-            //console.log(dEnd, dTotal);
+        gn[pAtual.id].visitado = true;
         caminho.push(pAtual);
         if(pAtual.id == gn[end].id){
             calculando = false;
@@ -585,7 +566,7 @@ function Astar(start, end){
         }
     }
     console.log(caminho);
-
+    console.log(gn);
     DrawAstar();
 
 }

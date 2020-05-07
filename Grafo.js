@@ -26,6 +26,12 @@ Grafo.prototype.getNodos = function(){
     return nodos;
 }
 
+Grafo.prototype.ResetVisitados = function(){
+    for(var i = 0; i< nodos.length;i++){
+        nodos[i].visitado = false;
+    }
+}
+
 /*Grafo.prototype.getNdeVizinhos = function(indice){
     return nodos[indice].arestas.lenght;
 }*/
