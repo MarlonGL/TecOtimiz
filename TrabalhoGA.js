@@ -185,7 +185,6 @@ function DrawPontos() {
     ctx.strokeStyle = "lime";
     for (var i = 0; i < pontos.length; i++) {
         ctx.beginPath();
-        //ctx.fillRect(pontos[i].x, pontos[i].y, pSize, pSize);
         ctx.arc(pontos[i].x, pontos[i].y, pSize, 0, 2 * Math.PI);
         ctx.lineWidth = 1;
         ctx.fill();

@@ -62,11 +62,16 @@ function PontosDefinidos(){
     ponto1 = { x: 0, y: 0 };
     ponto2 = { x: 0, y: 0 };
     pontos = [ {x:-13, y:0.5}, {x:-10.5, y:-11.5},
-        {x:-10, y:9}, {x:-4.5, y:-2}, {x:-1, y:8.5},
-        {x:0.5, y:6}, {x:0.5, y:-12}, {x:2, y:12.5},
-        {x:3.5, y:11}, {x:5.5, y:3}, {x:5.5, y:-7},
-        {x:5, y:11.5}, {x:6.5, y:3.2}, {x:7, y:-10},
-        {x:9, y:-5}, {x:11.5, y:-4} ];
+    {x:-10, y:9}, {x:-4.5, y:-2}, {x:-1, y:8.5},
+    {x:0.5, y:6}, {x:0.5, y:-12}, {x:2, y:12.5},
+    {x:3.5, y:11}, {x:5.5, y:3}, {x:5.5, y:-7},
+    {x:5, y:11.5}, {x:6.5, y:3.2}, {x:7, y:-10},
+    {x:9, y:-5}, {x:11.5, y:-4} ];
+
+    for (var i = 0; i < pontos.length; i++) {
+        pontos[i].x = pontos[i].x * 15;
+        pontos[i].y = pontos[i].y * 15;
+    }
     pontos.sort(function (a, b) {
         return a.x != b.x ? a.x - b.x : a.y - b.y;
     });
@@ -82,10 +87,12 @@ function PontosAleatorios() {
     pontos = [];
     ponto1 = { x: 0, y: 0 };
     ponto2 = { x: 0, y: 0 };
+    var w = width - 50;
+    var h = height - 50;
     var tam = 16;
     for (var i = 0; i < tam; i++) {
-        var xx = Math.round((Math.random() * 30) - 15);
-        var yy = Math.round((Math.random() * 30) - 15);
+        var xx = Math.round((Math.random() * w) - w/2);
+        var yy = Math.round((Math.random() * h) - h/2);
         pontos.push({ x: xx, y: yy});
     }
     pontos.sort(function (a, b) {
@@ -100,8 +107,13 @@ function PontosAleatorios() {
 
 function DrawPontos() {
     ctx.fillStyle = "white";
+    ctx.strokeStyle = "white";
     for (var i = 0; i < pontos.length; i++) {
-        ctx.fillRect(pontos[i].x * 15, pontos[i].y * 15, pSize, pSize);
+        ctx.beginPath();
+        ctx.arc(pontos[i].x, pontos[i].y, pSize, 0, 2 * Math.PI);
+        ctx.lineWidth = 1;
+        ctx.fill();
+        ctx.stroke();    
     }
 }
 
@@ -190,11 +202,21 @@ function closestDivideAndConquer(ps, tam, pp1, pp2){
 function finalDraw(){
     ctx.beginPath();
     ctx.strokeStyle = "yellow";
-    ctx.moveTo(minDist.po1.x * 15, minDist.po1.y * 15);
-    ctx.lineTo(minDist.po2.x * 15, minDist.po2.y * 15);
+    ctx.moveTo(minDist.po1.x, minDist.po1.y);
+    ctx.lineTo(minDist.po2.x, minDist.po2.y);
     ctx.lineWidth = 2;
     ctx.stroke();
     ctx.fillStyle = "red";
-    ctx.fillRect(minDist.po1.x * 15, minDist.po1.y * 15, pSize, pSize);
-    ctx.fillRect(minDist.po2.x * 15, minDist.po2.y * 15, pSize, pSize);
+    ctx.beginPath();
+    ctx.arc(minDist.po1.x, minDist.po1.y, pSize, 0, 2 * Math.PI);
+    ctx.lineWidth = 1;
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(minDist.po2.x, minDist.po2.y, pSize, 0, 2 * Math.PI);
+    ctx.lineWidth = 1;
+    ctx.fill();
+    ctx.stroke();
+    //ctx.fillRect(minDist.po1.x, minDist.po1.y, pSize, pSize);
+    //ctx.fillRect(minDist.po2.x, minDist.po2.y, pSize, pSize);
 }
