@@ -362,18 +362,7 @@ function DrawVoronoi() {
         ctx.stroke();
     }
 }
-function CalcularAngulos(origem){
-    for(var i = 1;i<pontos.length;i++){
-        var np = {x:0, y:0, a:0};
-        np.x = pontos[i].x - origem.x;
-        np.y = pontos[i].y - origem.y;
-        np.a = polarAngle(np);
-        if(np.a < 0){
-            np.a += Math.PI;
-        }
-        pontos[i].a = np.a;
-    }
-}
+
 function BotaoVoronoi(){
     voronoiBool = !voronoiBool;
     if(voronoiBool){
@@ -399,6 +388,18 @@ function BotaoGrafo(){
     }
     else{
         ReDraw("Grafo");
+    }
+}
+function CalcularAngulos(origem){
+    for(var i = 1;i<pontos.length;i++){
+        var np = {x:0, y:0, a:0};
+        np.x = pontos[i].x - origem.x;
+        np.y = pontos[i].y - origem.y;
+        np.a = polarAngle(np);
+        if(np.a < 0){
+            np.a += Math.PI;
+        }
+        pontos[i].a = np.a;
     }
 }
 function GrahamScan() {

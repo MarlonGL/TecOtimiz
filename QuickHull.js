@@ -8,19 +8,6 @@ var hull = [];
 var width;
 var height;
 
-function dotProduct(vec1, vec2) {
-    return (vec1.x * vec2.x + vec1.y * vec2.y);
-}
-function cross_product(p1, p2){
-    return((p1.x * p2.y) - (p2.x * p1.y));
-}
-function norm(vec) {
-    return Math.sqrt(vec.x * vec.x + vec.y * vec.y);
-}
-function computeAngle(v1, v2) {
-    var ac = dotProduct(v1, v2);
-    return Math.acos(ac / (norm(v1) * norm(v2))) * ONE_RADIAN;
-}
 function EuclidianDistance(p1, p2){
     return Math.sqrt(((p2.y - p1.y) * (p2.y - p1.y)) + ((p2.x - p1.x) * (p2.x - p1.x)));
 }
@@ -65,8 +52,6 @@ ctx.fillStyle = "black";
 ctx.fillRect(0, 0, width, height);
 
 ctx.translate(width/2, height/2);
-
-//pontos
 
 function CleanCanvas() {
     ctx.clearRect(-width/2, -height/2, width, height);
@@ -136,22 +121,13 @@ function QuickHull(){
     var s0 = [];
     var s1 = [];
     separarSegmentos(a, b, pontos, s0, s1);
-    /*ctx.fillStyle = "yellow";
-    for(var i=0;i<s0.length;i++){
-        ctx.fillRect(s0[i].x * 15, s0[i].y * 15, pSize, pSize);
-    }*/
-    //console.log(hull.indexOf(b));
+    
     FindHull(s0, a, b, hull);
     hull.push(hull[0]);
     FindHull(s1, b, a, hull);
     
     //adicionara o primeiro ponto dnovo para fechar o hull
     hull.push(hull[0]);
-    
-    //DrawConvexHull();
-
-    //console.log(hull);
-    //FindS(s1, hull[0], hull[1]);
 }
 
 function FindHull(s, p1, p2, cHull){
@@ -164,17 +140,13 @@ function FindHull(s, p1, p2, cHull){
     var dist = -99999;
     var d;
     for(var i = 0; i<s.length;i++){
-        //d = dist_linha_ponto(p1, p2, s[i]);
         d = DistancePointSeg(p1, p2, s[i]);
-        //if(d>= 0 && dist < d){
         if(dist <= d){
-
             maisLonge = i;
             dist = d;
         }
     }
     if(maisLonge == null){
-        //console.log("mais longe null");
         return;
     }
     //adicionar no array do hull
@@ -185,11 +157,11 @@ function FindHull(s, p1, p2, cHull){
     cHull.splice(pos, 0, c);
 
     separarSegmento(s, sec1, p1, c);
-    //separarSegmentos(p1, c, s, s3, s4);
+    
     FindHull(sec1, p1, c, cHull, false);
-    //separarSegmentos(c, p2, s, tempS, s4);
+    
     separarSegmento(s, sec2, c, p2);
-    //console.log(s4);
+    
     FindHull(sec2, c, p2, cHull, false);
 
 }
@@ -200,7 +172,7 @@ function DrawConvexHull(){
         ctx.moveTo(hull[i].x, hull[i].y);
         ctx.lineTo(hull[i + 1].x, hull[i + 1].y);
         ctx.strokeStyle = "yellow";
-        //ctx.lineWidth = 2;
+        ctx.lineWidth = 1;
         ctx.stroke();
     }
     ctx.fillStyle = "red";

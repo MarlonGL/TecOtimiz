@@ -77,7 +77,6 @@ function PontosDefinidos(){
     });
     DrawPontos();
     minDist = closestDivideAndConquer(pontos, pontos.length, ponto1, ponto2);
-    //minDist = brutal(pontos, pontos.length, ponto1, ponto2);
     console.log(minDist.po1, minDist.po2, minDist.min);
     finalDraw();
 }
@@ -89,7 +88,7 @@ function PontosAleatorios() {
     ponto2 = { x: 0, y: 0 };
     var w = width - 50;
     var h = height - 50;
-    var tam = 16;
+    var tam = 12;
     for (var i = 0; i < tam; i++) {
         var xx = Math.round((Math.random() * w) - w/2);
         var yy = Math.round((Math.random() * h) - h/2);
@@ -100,7 +99,6 @@ function PontosAleatorios() {
     });
     DrawPontos();
     minDist = closestDivideAndConquer(pontos, pontos.length, ponto1, ponto2);
-    //minDist = brutal(pontos, pontos.length, ponto1, ponto2);
     console.log(minDist.po1, minDist.po2, minDist.min);
     finalDraw();
 }
@@ -121,13 +119,6 @@ function DrawPontos() {
 
 function closestDivideAndConquer(ps, tam, pp1, pp2){
     var ptemp1 = {x:0, y:0}, ptemp2 = {x:0, y:0}, ptemp3 = {x:0, y:0}, ptemp4 = {x:0, y:0};
-
-    /*if(tam == 1){
-        return 10000;
-    }
-    else if(tam == 2){
-        return dist(ps[0], ps[1]);
-    }*/
     if(tam <= 3){
         var bruts;
         bruts = brutal(ps, tam, ptemp1, ptemp2);
@@ -136,8 +127,7 @@ function closestDivideAndConquer(ps, tam, pp1, pp2){
     var m = Math.floor(tam/2);
     var medio;
     medio = ps[m];
-    //console.log(pontos[m] + " medio");
-    //console.log(ps+m);
+    
     var p1 = [];
     var p2 = [];
     p1 = ps.slice(0, m);
@@ -148,10 +138,6 @@ function closestDivideAndConquer(ps, tam, pp1, pp2){
     var d2;
     d2 = closestDivideAndConquer(p2, p2.length, ptemp3, ptemp4);
     
-    //console.log(d1 + " d1 " + d2 + " d2");
-    //var pAtual;
-    //pAtual=  d1.ppp;
-
     if(d1.min < d2.min){
         pp1 = d1.po1;
         pp2 = d1.po2;
@@ -160,7 +146,7 @@ function closestDivideAndConquer(ps, tam, pp1, pp2){
         pp1 = d2.po1;
         pp2 = d2.po2;
     }
-    //console.log(pp1, pp2);
+
     var d3;
     d3 = Math.min(d1.min,d2.min);
 
@@ -181,7 +167,6 @@ function closestDivideAndConquer(ps, tam, pp1, pp2){
 				minimo = dist(pMedios[i], pMedios[j]);
 				pt1 = pMedios[i];
                 pt2 = pMedios[j];
-                //pAtual = [pMedios[i], pMedios[j]];
 			}
 		}
     }
@@ -189,13 +174,11 @@ function closestDivideAndConquer(ps, tam, pp1, pp2){
     var minFinal;
     minFinal = d3;
     if(minimo < d3){
-        //console.log("minimo < d3");
         pp1 = pt1;
         pp2 = pt2;
         minFinal = minimo;
     }
     return {min:minFinal, po1:pp1, po2:pp2};
-    //return {distancia:minimo, ppp:pAtual};
 }
 
 
@@ -207,6 +190,7 @@ function finalDraw(){
     ctx.lineWidth = 2;
     ctx.stroke();
     ctx.fillStyle = "red";
+    ctx.strokeStyle = "red";
     ctx.beginPath();
     ctx.arc(minDist.po1.x, minDist.po1.y, pSize, 0, 2 * Math.PI);
     ctx.lineWidth = 1;
